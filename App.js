@@ -1,38 +1,48 @@
+import React,{useEffect,useState} from 'react';
+import AsyncStorage from  '@react-native-community/async-storage'
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import React, {Component} from 'react';
-import {StyleSheet, 
-  View,Text} from 'react-native';
-import Login from './components/Login';
-import { NativeRouter, Route, Link } from "react-router-native";
-import Signup from './components/Signup';
-import Main from './components/Main';
-class App extends Component {
+import Signup from './components/Signup'
+import Login from './components/Login'
+import Loading from './components/Loading';
+import Home from './components/Home'
+import Forgot from './components/Forgot';
+
+
+const Stack = createStackNavigator();
+
+const App= ({ navigation }) => {
+   const [isloggedin,setLogged] = useState(null)
+
+   const detectLogin= async ()=>{
+      const token = await AsyncStorage.getItem('@storage_Key')
+      if(token){
+          setLogged(true)
+      }else{
+          setLogged(false)
+      }
+   }
+  useEffect(()=>{
+     detectLogin()
+  },[])
+
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
  
-  render(){
-    return ( 
-      <NativeRouter>
-      <View style={styles.container}>
-        <Route exact path="/" component={Login} />
-        <Route path="/signup" component={Signup} />
-        <Route path="/Main" component={Main}/>
-        </View>
-     </NativeRouter>
-    );
-  }
+            <Stack.Screen name="loading" component={Loading} />
+            <Stack.Screen name="home" component={Home} options={{title: "Gumzo"}}/>
+            <Stack.Screen name="login" component={Login}  options={{title: "Login"}}/>
+            <Stack.Screen name="signup" component={Signup} options={{title: "Signup"}}/>
+            <Stack.Screen name="forgot" component={Forgot} options={{title: "Re Reset Password"}}/>
+           
+      </Stack.Navigator>
+    </NavigationContainer>
+
+  );
 };
-
-const styles = StyleSheet.create({
-  container:{
-  
-    paddingTop: 60,
-  },
-  name:{
-    fontSize: 40,
-    fontWeight: '900',
-    alignSelf: "center"
-  },
-});
-
 
 
 export default App;

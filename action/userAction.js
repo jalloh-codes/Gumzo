@@ -1,5 +1,5 @@
 import axios from  '../axios/axios';
-
+import {Redirect} from "react-router-native";
 
 
 
@@ -55,6 +55,36 @@ export const getUsers =()=>{
 
             dispatch(_getUsers(users))
         })
+    }
+}
+
+
+const _logIn = (user) =>({
+    type: 'LOG_IN',
+    user
+})
+
+export const logIn = (userData = {
+    username: '',
+    password: ''
+})=>{
+    return(dispatch) =>{
+        const user ={
+            username: userData.username,
+            password: userData.password
+        };
+        return axios.post('/gumzo/login', user)
+            .then(result =>{
+                
+            
+                const tokenData = [];
+
+
+                tokenData.push(result.data)
+                dispatch(_logIn(result.data))
+                // dispatch(_logIn(tokenData)
+                
+            })
     }
 }
 

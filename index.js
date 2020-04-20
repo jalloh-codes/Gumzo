@@ -1,6 +1,7 @@
 /**
  * @format
  */
+import 'react-native-gesture-handler'
 import React from 'react';
 import {AppRegistry} from 'react-native';
 import App from './App';
@@ -10,9 +11,9 @@ import store from './store';
 
 
 
-const Gumzo = () =>
-    <Provider store={store}>
-        <App />
-    </Provider>
+// const Gumzo = () =>
+//     <Provider store={store}>
+//         <App />
+//     </Provider>
 
-AppRegistry.registerComponent(appName, () => Gumzo);
+AppRegistry.registerComponent(appName, () => App);

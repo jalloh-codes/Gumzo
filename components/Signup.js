@@ -1,111 +1,101 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import { SafeAreaView, StyleSheet, 
   View,Text,StatusBar, 
-  FlatList, TextInput, TouchableOpacity} from 'react-native';
+  FlatList, TextInput, TouchableOpacity, Alert} from 'react-native';
 import {getUsers, addUser} from '../action/userAction';
 import {connect} from 'react-redux';
-import {Link} from "react-router-native";
-class Signup extends Component {
-  constructor(props){
-    super(props);
-    this.state={
-      username: '',
-      password: '',
-      userID: '',
-      error: []
-    }
+import {Link, Redirect} from "react-router-native";
+const Signup = (props) =>{
 
-  }
+  const[username, setUsername] = useState('');
+  const[userID, setUserid] =useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState("");
 
-  componentDidMount(){
-    this.props.getUsers();
-  }
-
-
-  
-  onSubmit =(e) =>{
-      
-    this.state.error = []
-    if(!this.state.username || !this.state.password || !this.state.userID){
-      let add = this.state.error.concat('Username or Password or UserID is empty')
-      this.setState(state =>({
-        error: state.error.concat(add)
-      }))
+  const signUp= async (props)=>{
+    setError('')
+    if(!username || !userID || !password){
+      setError("Username Or Password is empty")
     }else{
-      let newData = {
-        username: this.state.username,
-        password: this.state.password,
-        userID: this.state.userID
-       
-      }
-      try{
-         this.props.addUser(newData)
-      }catch(err){
-        throw err;
-      }
+      fetch("http://localhost:8080/api/gumzo/create",{
+        method:"POST",
+        headers: {
+        'Content-Type': 'application/json'
+      },
+      body:JSON.stringify({
+        "username":username,
+        "userID":userID,
+        "password":password
+      })
+      })
+      .then(res=>res.json())
+      .then(async (data)=>{
+            try {   
+              props.navigation.replace("login")
+            } catch (e) {
+              console.log(e)
+            }
+      })
     }
   }
+  
 
-
-  render(){    
     
     return(
       <View style={styles.signup}>
-        <View style={styles.nameView}>
-            <Text style={styles.name}>Sign up</Text>
-        </View>
-        <FlatList
-        data={this.state.error}  
-          renderItem={({item}) => <Text key={item}>{item}</Text>
-        }/>
-        <View>
+        <View style={styles.errorBox}>
+                <Text style={styles.errorText}>{error}</Text>
+          </View>
+        <View style={styles.inputView}>
             <TextInput 
                 placeholder="Username"
                 style={styles.input}
-                value={this.state.username}
-                onChangeText={username => this.setState({username})}
+                value={username}
+                onChangeText={text => setUsername(text)}
             />
             <TextInput 
                 placeholder="User ID"
                 style={styles.input}
-                value={this.state.userID}
-                onChangeText={userID => this.setState({userID})}
+                value={userID}
+                onChangeText={text => setUserid(text)}
             />
             
             <TextInput 
                 placeholder="Password"
-                value={this.state.password}
-                onChangeText={password => this.setState({password})}
+                value={password}
+                onChangeText={text => setPassword(text)}
                 secureTextEntry={true}
                 style={styles.input}  
             />
             
             <TouchableOpacity
-              onPress={() => this.onSubmit()} 
+              onPress={() => signUp(props)} 
               style={styles.btn}>
             <Text  style={styles.btnText}>Sign up</Text>
             </TouchableOpacity>
         </View>
         <View style={styles.linkBox}>
-            <TouchableOpacity>
-                <Link to="/">
-                <Text style={styles.linkText}>Log in</Text> 
-                </Link>
+            <TouchableOpacity onPress={() => props.navigation.replace("login")}>
+                <Text style={styles.linkText}>Log in</Text>             
             </TouchableOpacity>
         </View>
       </View>
     );
-  }
 };
 
 const styles = StyleSheet.create({
   signup:{
     alignItems: "center",
+    backgroundColor: '#fcfcfc',
+    flex: 1,
+    flexDirection: 'column'
    
   },
-  nameView:{
-    marginTop: 150,
-    marginBottom: 20
+  inputView:{
+    marginTop: 50,
+    marginRight: 'auto',
+    marginBottom: 0,
+    marginLeft: 'auto',
  },
  name:{
   fontSize: 40,
@@ -113,23 +103,25 @@ const styles = StyleSheet.create({
   
 },
 input:{
-        margin: 5,
-        borderWidth: 2,
-        borderRadius: 20,
-        height: 60,
-        width: 320,
-        paddingLeft: 4,
-        borderColor: '#eee',
-    },
-    btn:{
-        backgroundColor: '#0a8eff',
-        alignSelf: 'center',
-        width: 100,
-        fontSize: 40,
-        padding: 15,
-        borderRadius: 20,
-       color: '#1b1d1f',
-    },
+    margin: 5,
+    borderWidth: 3,
+    borderRadius: 20,
+    height: 60,
+    width: 320,
+    paddingLeft: 4,
+    borderColor: '#eee',
+    backgroundColor: '#f2f7f7',
+    color: '#0d0c0c'
+  },
+  btn:{
+    backgroundColor: '#0a8eff',
+    alignSelf: 'center',
+    width: 100,
+    fontSize: 40,
+    padding: 15,
+    borderRadius: 20,
+    color: '#1b1d1f',
+  },
     btnText:{
         alignSelf: 'center',
         color: '#fff',
@@ -143,16 +135,17 @@ input:{
     },
     linkBox:{
         marginTop: 10
+    },
+    errorBox:{
+       
+      marginTop: 200,
+    },
+    errorText:{
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#ff4517',
     }
 
 });
 
-
-
-const mapStateToProps = (state) =>{
-  return{
-    users: state.userReducer
-  }
-}
-
-export default connect(mapStateToProps, {getUsers, addUser})(Signup);
+export default Signup;

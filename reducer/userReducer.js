@@ -6,6 +6,11 @@ const  userReducer = (state = usersReducer, action) =>{
                 ...state,
                 action.user
             ];
+        case 'LOG_IN':
+            return[
+                ...state,
+                action.user
+            ];
         case 'DELETE_USER':
             return state.filter(({id}) => id !== action.id);
         case 'GET_USERS':
