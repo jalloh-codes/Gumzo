@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 
-const Tabs = ()=> {
+const Tabs = (props)=> {
 
     return (
         <View style={styles.container}>

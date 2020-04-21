@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, 
-  View,Text, TouchableOpacity, TextInput, AsyncStorage} from 'react-native';
-  import { Redirect} from "react-router-native";
-
+import { StyleSheet,View,Text, TouchableOpacity} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 const Profile = (props)=> {
 
     const [islogin, setLogin] = useState(null); 
@@ -28,7 +26,6 @@ const Profile = (props)=> {
          if(value){
              setLogin(true)
          }else{
-             //await AsyncStorage.removeItem('@storage_Key');
              setLogin(false)
          }
 

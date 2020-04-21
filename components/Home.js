@@ -1,7 +1,6 @@
   
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
-import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage'
 
 

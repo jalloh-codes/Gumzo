@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, View, Text, AsyncStorage} from 'react-native';
-
+import {StyleSheet, View, Text} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 export default class Setting extends React.Component {
 
     constructor() {

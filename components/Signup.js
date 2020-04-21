@@ -1,10 +1,6 @@
 import React, {useState} from 'react';
-import { SafeAreaView, StyleSheet, 
-  View,Text,StatusBar, 
-  FlatList, TextInput, TouchableOpacity, Alert} from 'react-native';
-import {getUsers, addUser} from '../action/userAction';
-import {connect} from 'react-redux';
-import {Link, Redirect} from "react-router-native";
+import {StyleSheet, 
+  View,Text, TextInput, TouchableOpacity} from 'react-native';
 const Signup = (props) =>{
 
   const[username, setUsername] = useState('');

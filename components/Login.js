@@ -96,7 +96,7 @@ const Login = (props)=> {
         flexDirection: 'column'
     },
     inputView:{
-       marginTop: 50,
+       marginTop: 20,
        marginRight: 'auto',
        marginBottom: 0,
        marginLeft: 'auto',
