@@ -1,25 +1,17 @@
 import React,{useEffect} from 'react';
-
+import {detectLogin} from './auth';
 import {
   ActivityIndicator,
   View,
   StyleSheet
 } from 'react-native';
 
-import AsyncStorage from '@react-native-community/async-storage';
+
 const Loading = (props) => {
 
 
-  const detectLogin= async ()=>{
-    const token = await AsyncStorage.getItem('@storage_Key')
-        if(token){
-              props.navigation.replace("home")
-        }else{
-            props.navigation.replace("login")
-        }
-  }
   useEffect(()=>{
-   detectLogin()
+   detectLogin(props)
   },[])
 
   return (

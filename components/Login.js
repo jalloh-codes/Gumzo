@@ -1,7 +1,7 @@
   
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet,View,Text, TouchableOpacity, TextInput} from 'react-native';
-
+import {detectLogin} from './auth';
 import AsyncStorage from '@react-native-community/async-storage'
 
 
@@ -33,14 +33,19 @@ const Login = (props)=> {
                 .then(async (data)=>{
                     try{
                         await AsyncStorage.setItem('@storage_Key', data.token)                     
-                        props.navigation.replace("home")                      
+                        props.navigation.replace('main',  {screen: 'profile'})                      
                     }catch(e){
                         console.log("errrr");                    
                     }
                 })
             }
         }
-        
+
+
+        // useEffect(()=>{
+        //     detectLogin(props)
+        //    },[])
+         
 
 
         return (
@@ -70,14 +75,14 @@ const Login = (props)=> {
             </View>
             <View style={styles.linkBox}>
             <TouchableOpacity
-                onPress={() => props.navigation.replace("signup")}>    
+                onPress={() => props.navigation.navigate("signup")}>    
                 <Text style={styles.linkText}>Create an account</Text> 
                 
             </TouchableOpacity>
             </View>
             <TouchableOpacity 
                 style={styles.forgot}
-                onPress={() => props.navigation.replace("forgot")}>
+                onPress={() => props.navigation.navigate("forgot")}>
                 <Text style={styles.errorText}>{reset}</Text>
             </TouchableOpacity>
            

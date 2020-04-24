@@ -2,43 +2,20 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage'
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 const  Home = (props)=> {
-
-
-
-        //const token = await AsyncStorage.getItem('@storage_Key');
-
-    const [userID,setUserID] = useState("loading")
-    const Boiler = async ()=>{
-        const token = await AsyncStorage.getItem('@storage_Key')
-        fetch('http://localhost:8080/api/gumzo/user/auth',{
-        headers:new Headers({
-        Authorization:"Bearer "+token
-        })
-        }).then(res=>res.json())
-        .then(data=>{
-        setUserID(data.username)
-        }
-        )
-    }
-
-     useEffect(()=>{
-        Boiler()
-     },[])
-
     const logout =  (props) =>{
         AsyncStorage.removeItem('@storage_Key').then(()=>{
-            props.navigation.replace("login")
+            props.navigation.replace("auth",  {screen: 'login'})  
         })
     }
 
     return (
         <View style={styles.container}>
             <Text>Welcome </Text>
-            <Text>to Home Screen {userID}</Text>
+            <Text>to Home Screen</Text>
 
             <TouchableOpacity style={styles.btn} onPress={() =>logout(props)}>
                 <Text style={styles.btnText}>Logout</Text>

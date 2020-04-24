@@ -42,7 +42,7 @@ const Forgot = (props) => {
         </TouchableOpacity>
     </View>
     <View style={styles.linkBox}>
-            <TouchableOpacity onPress={() => props.navigation.replace("login")}>
+            <TouchableOpacity onPress={() => props.navigation.navigate("login")}>
                 <Text style={styles.linkText}>Log in</Text>             
             </TouchableOpacity>
         </View>

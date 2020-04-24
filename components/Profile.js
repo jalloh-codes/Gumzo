@@ -3,56 +3,11 @@ import { StyleSheet,View,Text, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 const Profile = (props)=> {
 
-    const [islogin, setLogin] = useState(null); 
-    const[username, setUsername]  =useState('');
-
-    const Boiler = async ()=>{
-        const token = await AsyncStorage.getItem('@storage_Key')
-        fetch('http://localhost:8080/api/gumzo/user/auth',{
-            headers:new Headers({
-                Authorization:"Beare "+token
-            })
-        }).then(res=>res.json())
-        .then(data=>{
-            console.log(data.username)
-            setUsername(data.username)
-        }
-        )
-     }
-
-     
-     const detect = async ()=>{
-        const value = await  AsyncStorage.getItem('@storage_Key');
-         if(value){
-             setLogin(true)
-         }else{
-             setLogin(false)
-         }
-
-         console.log(value);
-         
-     }
-
-     useEffect(()=>{
-        Boiler()
-        // detect()
-     },[])
-
-     const logout = ()=>{
-          setLogin(false)
-     }
-    
-
     return(
         <View>   
             <View>
-            <Text>{username}</Text>
+            <Text>Sitting</Text>
             </View>
-             <TouchableOpacity
-                style={styles.btn}
-                onPress={() => logout()}>
-                <Text  style={styles.btnText}>Logout</Text>
-                </TouchableOpacity>
         </View>
     );
   }

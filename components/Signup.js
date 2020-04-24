@@ -1,6 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, 
   View,Text, TextInput, TouchableOpacity} from 'react-native';
+
+
 const Signup = (props) =>{
 
   const[username, setUsername] = useState('');
@@ -27,7 +29,7 @@ const Signup = (props) =>{
       .then(res=>res.json())
       .then(async (data)=>{
             try {   
-              props.navigation.replace("login")
+              props.navigation.navigate("login")
             } catch (e) {
               console.log(e)
             }
@@ -35,7 +37,6 @@ const Signup = (props) =>{
     }
   }
   
-
     
     return(
       <View style={styles.signup}>
@@ -71,7 +72,7 @@ const Signup = (props) =>{
             </TouchableOpacity>
         </View>
         <View style={styles.linkBox}>
-            <TouchableOpacity onPress={() => props.navigation.replace("login")}>
+            <TouchableOpacity onPress={() => props.navigation.navigate("login")}>
                 <Text style={styles.linkText}>Log in</Text>             
             </TouchableOpacity>
         </View>
