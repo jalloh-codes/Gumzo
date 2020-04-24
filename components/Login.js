@@ -35,7 +35,7 @@ const Login = (props)=> {
                         await AsyncStorage.setItem('@storage_Key', data.token)                     
                         props.navigation.replace('main',  {screen: 'profile'})                      
                     }catch(e){
-                        console.log("errrr");                    
+                        setError("Username or Password is incorrect")                
                     }
                 })
             }

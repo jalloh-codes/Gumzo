@@ -25,18 +25,8 @@ const Tabs = () =>{
     activeColor="#e91e63"
       style={{ backgroundColor: 'tomato' }}
     >
-      <Tab.Screen name="home" component={Home} options={{
-          tabBarLabel: 'home',
-          tabBarIcon: ({ tintColor }) => (
-            <MaterialCommunityIcons name="home" color={tintColor} size={26} />
-          ),
-        }}/>
-      <Tab.Screen name="profile" component={Profile} options={{
-          tabBarLabel: 'profile',
-          tabBarIcon: ({ tintColor }) => (
-            <MaterialCommunityIcons name="bell" color={tintColor} size={26} />
-          ),
-        }}/>
+      <Tab.Screen name="home" component={Home} />
+      <Tab.Screen name="profile" component={Profile}/>
       <Tab.Screen name="sitting" component={Sitting} />
     </Tab.Navigator>
   )
