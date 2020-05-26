@@ -1,10 +1,8 @@
-import React,{useEffect,useState} from 'react';
-import AsyncStorage from  '@react-native-community/async-storage' 
-import { NavigationContainer } from '@react-navigation/native';
+import React,{useState} from 'react';
+import { NavigationContainer} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from "react-native-vector-icons/FontAwesome5";
-import {detectLogin} from './components/auth';
+
 import Signup from './components/Signup'
 import Login from './components/Login'
 import Loading from './components/Loading';
@@ -13,28 +11,41 @@ import Forgot from './components/Forgot';
 import Profile from './components/Profile';
 import Sitting from './components/Setting';
 import {StyleSheet} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
+ //import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
 
-const Tabs = () =>{
+const Tabs = ({navigation}) =>{
   return(
-    <Tab.Navigator
-    activeColor="#e91e63"
-      style={{ backgroundColor: 'tomato' }}
-    >
-      <Tab.Screen name="home" component={Home} />
-      <Tab.Screen name="profile" component={Profile}/>
-      <Tab.Screen name="sitting" component={Sitting} />
+    <Tab.Navigator headerMode='none'initialRouteName="home" >
+      <Tab.Screen name="home" component={Home} 
+        options={{tabBarLabel: 'Home',
+        tabBarIcon: () =>(
+          <Icon name="home" size={20} color="firebrick" />
+        )
+      }}/>
+      <Tab.Screen name="profile" component={Profile}
+      options={{tabBarLabel: 'Profile',
+      tabBarIcon: () =>(
+        <Icon name="user"  size={20} color="firebrick" />
+      )
+      }}/>
+      <Tab.Screen name="sitting" component={Sitting} 
+      options={{tabBarLabel: 'Setting',
+      tabBarIcon: () =>(
+        <Icon name="cog" size={20} color="firebrick" />
+      )
+      }}/>
     </Tab.Navigator>
   )
 }
 
-const Screens =  ()=>{
+const Screens =  ({navigation})=>{
   return(
-  <Stack.Navigator>
+  <Stack.Navigator headerMode='none'>
   <Stack.Screen name="loading" component={Loading} />
   <Stack.Screen name="login" component={Login}  options={{title: "Login"}}/>
   <Stack.Screen name="signup" component={Signup} options={{title: "Signup"}}/>
@@ -44,9 +55,8 @@ const Screens =  ()=>{
 };
 
 
-const RootSctackScreen = (props, {isloggedin}) =>{
-  //console.log({isloggedin});
-  //console.log(props.navigation);
+const RootSctackScreen = ({navigation}) =>{
+
   
   return(
   <RootStack.Navigator>
@@ -58,26 +68,11 @@ const RootSctackScreen = (props, {isloggedin}) =>{
 
 const App= ({ navigation }) => {
    const [isloggedin,setLogged] = useState(null)
-   //console.log({navigation});
-  //  const detectLogin= async ()=>{
-  //     const token = await AsyncStorage.getItem('@storage_Key')
-  //     //console.log({token: token});
-      
-  //     if(token){
-  //         setLogged(true)
-  //         //navigation.replace('main')
-  //     }else{
-  //         setLogged(false)
-  //         //navigation.replace('auth')
-  //     }
-  //  }
-  // useEffect(()=>{
-  //    detectLogin()
-  // },[])
 
 
   return (
-    <NavigationContainer>
+
+    <NavigationContainer >
       <RootSctackScreen  isloggedin={isloggedin}/>
     </NavigationContainer>
 
@@ -86,8 +81,8 @@ const App= ({ navigation }) => {
 
   const styles = StyleSheet.create({
     btn:{
-      backgroundColor: '#0a8eff',
-      color: '#1b1d1f',
+      backgroundColor: "#0a8eff",
+      color: "#1b1d1f",
     },
   })
 

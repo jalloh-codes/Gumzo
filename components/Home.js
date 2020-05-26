@@ -2,9 +2,9 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage'
-import Icon from 'react-native-vector-icons/FontAwesome';
 
-
+ import Icon from 'react-native-vector-icons/dist/FontAwesome';
+// const myIcon1 = <Icon name="comments" size={20} color="#900" />
 const  Home = (props)=> {
     const logout =  (props) =>{
         AsyncStorage.removeItem('@storage_Key').then(()=>{
@@ -19,6 +19,7 @@ const  Home = (props)=> {
 
             <TouchableOpacity style={styles.btn} onPress={() =>logout(props)}>
                 <Text style={styles.btnText}>Logout</Text>
+                
             </TouchableOpacity>
            
         </View>

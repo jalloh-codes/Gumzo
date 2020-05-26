@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet,View,Text, TouchableOpacity, TextInput} from 'react-native';
 import {detectLogin} from './auth';
 import AsyncStorage from '@react-native-community/async-storage'
-
+import axios from 'axios';
 
 const Login = (props)=> {
 
@@ -37,6 +37,9 @@ const Login = (props)=> {
                     }catch(e){
                         setError("Username or Password is incorrect")                
                     }
+                }).catch((e) =>{
+                    console.log(e);
+                    
                 })
             }
         }
