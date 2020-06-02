@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet,View,Text, TouchableOpacity} from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet,View,Text, TouchableOpacity, TextInput} from 'react-native';
+import Search from '../components/search'
 import AsyncStorage from '@react-native-community/async-storage';
-const Profile = (props)=> {
-
-    return(
-        <View>   
-            <View>
-            <Text>Sitting</Text>
+class MessagesList extends Component {
+    render(){
+        return(
+            <View>   
+                <View>
+                    <Search />
+                
+                </View>
             </View>
-        </View>
-    );
+        );
+    }
   }
 
 
@@ -32,4 +35,4 @@ const Profile = (props)=> {
   });
 
 
-  export  default Profile;
+  export  default MessagesList;

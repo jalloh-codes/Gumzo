@@ -1,96 +1,96 @@
   
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import { StyleSheet,View,Text, TouchableOpacity, TextInput} from 'react-native';
-import {detectLogin} from './auth';
+import {detectLogin} from '../auth';
 import AsyncStorage from '@react-native-community/async-storage'
-import axios from 'axios';
+import {logIn} from '../../action/authAction';
+import {connect} from 'react-redux';
+class Login extends Component {
 
-const Login = (props)=> {
-
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState("");
-    const [reset, setReset] = useState("Forgot password");
-
-
-        const sendLogin = async (props) =>{
-            setError('')
-            if(!username || !password){
-              setError("Username Or Password is empty")
-                
-            }else{
-                fetch("http://localhost:8080/api/gumzo/login", {
-                    method:"POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body:JSON.stringify({
-                        "username": username,
-                        "password": password
-                    })
-                })
-                .then(res =>res.json())
-                .then(async (data)=>{
-                    try{
-                        await AsyncStorage.setItem('@storage_Key', data.token)                     
-                        props.navigation.replace('main',  {screen: 'profile'})                      
-                    }catch(e){
-                        setError("Username or Password is incorrect")                
-                    }
-                }).catch((e) =>{
-                    console.log(e);
-                    
-                })
-            }
+    constructor(props){
+        super(props);
+        this.state ={
+          username: '',
+          password: '',
+          error: '',
+          reset: 'Forgot password'
         }
-
-
-        // useEffect(()=>{
-        //     detectLogin(props)
-        //    },[])
-         
-
-
+        this.sendLogin = this.sendLogin.bind(this);
+      }
+    
+        sendLogin = () =>{
+            this.state.error = ''
+            if(!this.state.username || !this.state.password){
+                this.setState({error: "Username Or Password is empty"})
+            }else{ 
+                let data = {
+                    username: this.state.username,
+                    password: this.state.password
+                  }
+              try{
+                this.props.logIn(data)
+                .then(async (result) =>{
+                    this.state.error = ''
+                    if(result.data.success == true){
+                        await AsyncStorage.setItem('@storage_Key', result.data.token)
+                        this.props.navigation.replace('main',  {screen: 'home'}) 
+                    }
+                })        
+                .catch(err =>{
+                    this.setState({error: 'Username or Password is incorrect'})
+                })
+              }
+              catch(error){
+                console.log({error})
+              }
+            }
+             
+          }
+    render(){
         return (
         <View style={styles.Firstpage}>
             <View style={styles.errorBox}>
-                <Text style={styles.errorText}>{error}</Text>
+                <Text style={styles.errorText}>{this.state.error}</Text>
             </View>
             <View style={styles.inputView}>
                 <TextInput 
                     placeholder="Username"
+                    autoCapitalize = "none"
                     style={styles.input}
-                    value={username}
-                    onChangeText={text => setUsername(text)}/>
+                    value={this.state.username}                  
+                    placeholderTextColor = "#0a8eff"
+                    onChangeText={(username) => this.setState({username})}/>
         
                 <TextInput 
                     placeholder="Password"
-                    value={password}
-                    onChangeText={text => setPassword(text)}
+                    value={this.state.password}
+                    onChangeText={(password) => this.setState({password})}
                     secureTextEntry={true}
+                    placeholderTextColor = "#0a8eff"
                     style={styles.input}/>
                 
                 <TouchableOpacity
                 style={styles.btn}
-                onPress={() => sendLogin(props)}>
+                onPress={() => this.sendLogin()}>
                 <Text  style={styles.btnText}>Login</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.linkBox}>
             <TouchableOpacity
-                onPress={() => props.navigation.navigate("signup")}>    
+                onPress={() => this.props.navigation.navigate("signup")}>    
                 <Text style={styles.linkText}>Create an account</Text> 
                 
             </TouchableOpacity>
             </View>
             <TouchableOpacity 
                 style={styles.forgot}
-                onPress={() => props.navigation.navigate("forgot")}>
-                <Text style={styles.errorText}>{reset}</Text>
+                onPress={() => this.props.navigation.navigate("forgot")}>
+                <Text style={styles.errorText}>{this.state.reset}</Text>
             </TouchableOpacity>
            
         </View>
         );
+    }
   };
 
   
@@ -157,5 +157,11 @@ const Login = (props)=> {
     }
   });
 
-export default Login;
+  const mapStateToProps = (state) =>{
+    return{
+      user: state.authReducer
+    }
+  }
+
+export default connect(mapStateToProps,{logIn})(Login);
 
