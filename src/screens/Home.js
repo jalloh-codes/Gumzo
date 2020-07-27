@@ -1,29 +1,21 @@
   
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage'
-
- import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import React, {Component} from 'react';
+import {StyleSheet, View, Text, TouchableOpacity, Button} from 'react-native';
 // const myIcon1 = <Icon name="comments" size={20} color="#900" />
-const  Home = (props)=> {
-    const logout =  (props) =>{
-        AsyncStorage.removeItem('@storage_Key').then(()=>{
-            props.navigation.replace("auth",  {screen: 'login'})  
-        })
-    }
+import AsyncStorage from '@react-native-community/async-storage';
+class  Home extends Component{
 
-    return (
-        <View style={styles.container}>
-            <Text>Welcome </Text>
-            <Text>to Home Screen</Text>
 
-            <TouchableOpacity style={styles.btn} onPress={() =>logout(props)}>
-                <Text style={styles.btnText}>Logout</Text>
+
+    render(){ 
+        return (
+            <View style={styles.container}>
+                <Text>Welcome </Text>
+                <Text>to Home Screen</Text>
                 
-            </TouchableOpacity>
-           
-        </View>
-    );
+            </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
@@ -48,5 +40,7 @@ const styles = StyleSheet.create({
         color: '#1b1d1f'
     },
 });
+
+
 
 export default Home;

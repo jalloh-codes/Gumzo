@@ -2,10 +2,12 @@ import React,{useState} from 'react';
 import { NavigationContainer} from '@react-navigation/native';
 import {StyleSheet} from 'react-native';
 import RootSctackScreen from './src/RootStack/RootStack'
-
+import AsyncStorage from '@react-native-community/async-storage';
 
 const App= ({ navigation }) => {
    const [isloggedin,setLogged] = useState(null)
+
+   
   return (
     <NavigationContainer >
       <RootSctackScreen  isloggedin={isloggedin}/>

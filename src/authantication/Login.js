@@ -1,167 +1,167 @@
-  
-import React, { Component } from 'react';
-import { StyleSheet,View,Text, TouchableOpacity, TextInput} from 'react-native';
-import {detectLogin} from '../auth';
-import AsyncStorage from '@react-native-community/async-storage'
-import {logIn} from '../../action/authAction';
-import {connect} from 'react-redux';
-class Login extends Component {
+import React from 'react';
+import { StyleSheet, ScrollView, 
+    View, KeyboardAvoidingView, TextInput,
+    Platform, Image, TouchableOpacity, Text, Alert} from 'react-native';
+import { Formik } from "formik";
+import * as yup from 'yup';
+import * as authAction from '../../action/authAction';
+import {useDispatch} from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 
-    constructor(props){
-        super(props);
-        this.state ={
-          username: '',
-          password: '',
-          error: '',
-          reset: 'Forgot password'
-        }
-        this.sendLogin = this.sendLogin.bind(this);
-      }
-    
-        sendLogin = () =>{
-            this.state.error = ''
-            if(!this.state.username || !this.state.password){
-                this.setState({error: "Username Or Password is empty"})
-            }else{ 
-                let data = {
-                    username: this.state.username,
-                    password: this.state.password
-                  }
-              try{
-                this.props.logIn(data)
-                .then(async (result) =>{
-                    this.state.error = ''
-                    if(result.data.success == true){
-                        await AsyncStorage.setItem('@storage_Key', result.data.token)
-                        this.props.navigation.replace('main',  {screen: 'home'}) 
-                    }
-                })        
-                .catch(err =>{
-                    this.setState({error: 'Username or Password is incorrect'})
-                })
-              }
-              catch(error){
-                console.log({error})
-              }
-            }
-             
-          }
-    render(){
-        return (
-        <View style={styles.Firstpage}>
-            <View style={styles.errorBox}>
-                <Text style={styles.errorText}>{this.state.error}</Text>
-            </View>
-            <View style={styles.inputView}>
-                <TextInput 
-                    placeholder="Username"
-                    autoCapitalize = "none"
-                    style={styles.input}
-                    value={this.state.username}                  
-                    placeholderTextColor = "#0a8eff"
-                    onChangeText={(username) => this.setState({username})}/>
-        
-                <TextInput 
-                    placeholder="Password"
-                    value={this.state.password}
-                    onChangeText={(password) => this.setState({password})}
-                    secureTextEntry={true}
-                    placeholderTextColor = "#0a8eff"
-                    style={styles.input}/>
-                
-                <TouchableOpacity
-                style={styles.btn}
-                onPress={() => this.sendLogin()}>
-                <Text  style={styles.btnText}>Login</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.linkBox}>
-            <TouchableOpacity
-                onPress={() => this.props.navigation.navigate("signup")}>    
-                <Text style={styles.linkText}>Create an account</Text> 
-                
-            </TouchableOpacity>
-            </View>
-            <TouchableOpacity 
-                style={styles.forgot}
-                onPress={() => this.props.navigation.navigate("forgot")}>
-                <Text style={styles.errorText}>{this.state.reset}</Text>
-            </TouchableOpacity>
-           
-        </View>
-        );
-    }
-  };
-
-  
+const formShema  = yup.object({
+    username: yup.string().required(),
+    password: yup.string().required()
+})
+const Login = (props) =>{
 
 
-  const styles = StyleSheet.create({
-    Firstpage:{
-        alignItems: "center",
-        backgroundColor: '#fcfcfc',
+    const dispatch = useDispatch();
+    return(
+        <KeyboardAvoidingView 
+        behavior={Platform.OS === "ios"? "padding" : "height" } 
+        style={{flex:1}}>
+                <Formik 
+                initialValues={{
+                   username: "",
+                   password: "", 
+                }}
+                validationSchema={formShema}
+                onSubmit={(values) =>{
+                    dispatch(authAction.loginUser(values))
+                    .then(async result =>{
+                        if(result.success){
+                            try{
+                                await AsyncStorage.setItem('@storage_Key', result.token)
+                                props.navigation.replace('Main', {screen: 'home'});
+                            }catch(err){
+                                //console.log(err);   
+                            }
+                        }else{
+                            Alert.alert(result.message)
+                        }
+                    })
+                    .catch(err => console.log(err))
+                }}>
+                    {({
+                        values,
+                        handleChange,
+                        handleSubmit,
+                        touched,
+                        errors,
+                        handleBlur
+                    }) =>(
+                        <View style={styles.container}>
+                            <View >
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder='Usrname'
+                                    placeholderTextColor='#fff'
+                                    // keyboardType="email-address"
+                                    onChangeText={handleChange('username')}
+                                    value={values.username}
+                                    onBlur={handleBlur('username')}/>
+                                <Text style={styles.error}>{touched.username && errors.username}</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder='Password'
+                                    placeholderTextColor='#fff'
+                                    secureTextEntry={true}
+                                    onChangeText={handleChange('password')}
+                                    value={values.password}
+                                    onBlur={handleBlur('password')}/>
+                                    <Text style={styles.error}>{touched.password && errors.password}</Text>
+                                <TouchableOpacity 
+                                    style={styles.button}
+                                    onPress={handleSubmit}
+                                >
+                                    <Text style={styles.buttonText}>Login</Text>
+                                </TouchableOpacity>
+                                <View style={styles.registerContainer}>
+                                    <Text style={styles.registerText}>Create an </Text>
+                                    <TouchableOpacity
+                                        onPress={() => props.navigation.navigate('signup')}>
+                                        <Text style={styles.registerButton}>account</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.registerContainer}>
+                                    <Text style={styles.registerText}>Forgot </Text>
+                                    <TouchableOpacity
+                                        onPress={() => props.navigation.navigate('forgot')}>
+                                        <Text style={styles.forgot}>password</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            
+                        </View>
+                    )}
+                </Formik>
+
+        </KeyboardAvoidingView>
+    )
+}
+
+
+
+
+const styles = StyleSheet.create({
+    container:{
         flex: 1,
-        flexDirection: 'column'
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#ffffff'
     },
-    inputView:{
-       marginTop: 20,
-       marginRight: 'auto',
-       marginBottom: 0,
-       marginLeft: 'auto',
+    logo:{
+        alignItems: 'center',
+        marginBottom: 40
+    },
+    image:{
+        width: 100,
+        height: 100
     },
     input:{
-        margin: 5,
-        borderWidth: 3,
-        borderRadius: 20,
-        height: 60,
-        width: 320,
-        paddingLeft: 4,
-        borderColor: '#eee',
-        backgroundColor: '#f2f7f7',
-        color: '#0d0c0c'
+        width: 300,
+        backgroundColor: '#B6BFC4',
+        borderRadius: 25,
+        padding: 16,
+        fontSize: 16,
+        marginVertical: 10
     },
-    btn:{
-        backgroundColor: '#0a8eff',
-        alignSelf: 'center',
-        width: 100,
-        fontSize: 40,
-        padding: 15,
-        borderRadius: 20,
-       color: '#1b1d1f',
+    button:{
+        width: 300,
+        backgroundColor: '#738289',
+        borderRadius: 25,
+        marginVertical: 10,
+        paddingVertical: 13
     },
-    btnText:{
-        alignSelf: 'center',
-        color: '#fff',
-        padding: 4,
-        color: '#1b1d1f'
+    buttonText:{
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#ffffff',
+        textAlign: 'center'
     },
-    linkText:{
-        color: '#00756c',
-        fontWeight: '700',
-        fontSize: 18
+    registerContainer:{
+        alignContent: 'flex-end',
+        justifyContent: 'center',
+        paddingVertical: 16,
+        flexDirection: 'row',
     },
-    linkBox:{
-        marginTop: 5
+    registerText:{
+        color: '#738289',
+        fontSize: 16
     },
-    errorBox:{
-       
-        marginTop: 200,
+    registerButton:{
+        color: '#738289',
+        fontSize: 16,
+        fontWeight: 'bold'
     },
     forgot:{
-        marginTop: 20,
+        color: 'red',
+        fontSize: 16,
+        fontWeight: 'bold'
     },
-    errorText:{
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#ff4517',
+    error:{
+        color: 'red'
     }
-  });
 
-  const mapStateToProps = (state) =>{
-    return{
-      user: state.authReducer
-    }
-  }
-
-export default connect(mapStateToProps,{logIn})(Login);
-
+})
+export default Login;

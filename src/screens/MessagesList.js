@@ -2,13 +2,44 @@ import React, { Component } from 'react';
 import { StyleSheet,View,Text, TouchableOpacity, TextInput} from 'react-native';
 import Search from '../components/search'
 import AsyncStorage from '@react-native-community/async-storage';
+import {getContacts} from '../../action/userAction';
+import {connect} from 'react-redux';
+import decode from 'jwt-decode';
 class MessagesList extends Component {
+
+    constructor(props){
+        super(props);
+        this.state ={
+            setToken: '',
+            userID: '',
+            username: '',
+            id: '',
+        }
+    }
+
+    getToken = async () =>{
+        await AsyncStorage.getItem('@storage_Key').then((tk) =>{
+
+           this.setState({setToken: tk})
+           let deco = decode(tk)
+           this.props.getContacts(deco._id)
+           this.setState({userID: deco.userID})
+           this.setState({username: deco.username})
+           this.setState({id: deco._id})
+       })
+    }
+
+    async componentDidMount(){
+        //this.props.getContacts()
+          this.getToken()
+  
+    }
     render(){
         return(
             <View>   
                 <View>
                     <Search />
-                
+                    <Text>{this.state.username}</Text>
                 </View>
             </View>
         );
@@ -34,5 +65,10 @@ class MessagesList extends Component {
     }
   });
 
+const mapStateToProps = (state) =>{
+    return{
+        contacts: state.contacts.user
+    }
+}
 
-  export  default MessagesList;
+export  default connect(mapStateToProps, {getContacts})(MessagesList);

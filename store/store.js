@@ -1,13 +1,14 @@
-import {createStore, applyMiddleware, combineReducers, compose} from 'redux'
-import authReducer from '../reducer/authReducer';
-
+import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 
-const initialState = {};
-const middleware = [thunk];
 
-const store = createStore(combineReducers({authReducer}), initialState, compose(
-    applyMiddleware(...middleware)
-));
+import authReducer from '../reducer/authReducer';
+import userReducer from '../reducer/userReducer';
+const rootReducer = combineReducers({
+    auth: authReducer,
+    contacts: userReducer
+});
 
-export default store;
+const middleware = applyMiddleware(thunk);
+
+export default createStore(rootReducer, middleware);

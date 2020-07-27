@@ -1,90 +1,58 @@
-import axios from  '../axios/axios';
-import {Redirect} from "react-router-native";
+export const GET_CONTACTS_SUCCESS = 'GET_CONTACTS_SUCCESS';
+export const  GET_CONTACTS_FAIL = 'GET_CONTACTS_SUCCESS'
+export const GET_USER_INFO = 'GET_USER_INFO';
+import axios from 'axios'
 
+const url = 'http://localhost:8080/api/auth/';
+export const getContacts = (id) =>{
+    return async dispatch =>{
+        const result = await fetch(`${url}/contacts/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
 
-
-const _addUser = (user) =>({
-    type: 'ADD_USER',
-    user
-})
-
-export const addUser = (userData = {
-    username: '',
-    password: '',
-    userID: ''
-})=>{
-    return(dispatch) =>{
-        const user ={
-            username: userData.username,
-            password: userData.password,
-            userID: userData.userID
-        };
-        return axios.post('/gumzo/create', user)
-            .then(result =>{
-                dispatch(_addUser(result.data))
+        await result.json().then(res => 
+            dispatch({
+                type:  GET_CONTACTS_SUCCESS,
+                payload: res[0]
             })
-    }
-}
-
-const _deleteUser = ({id} = {}) =>({
-    type: 'DELETE_USER',
-    id
-})
-
-export const deleteUser = ({id} = {})=>{
-    return (dispatch) =>{
-        return axios.delete(`/user/${id}`).then(() =>{
-            dispatch(_deleteUser({id}))
-        })
-    }
-};
-
-const _getUsers = (users) => ({
-    type: 'GET_USERS',
-    users
-})
-
-export const getUsers =()=>{
-    return(dispatch)=>{
-        return axios.get('/gumzo/users').then(result =>{
-            const users = [];
-
-            result.data.forEach(user => {
-                users.push(user)
-            });
-
-            dispatch(_getUsers(users))
-        })
-    }
-}
-
-
-const _logIn = (user) =>({
-    type: 'LOG_IN',
-    user
-})
-
-export const logIn = (userData = {
-    username: '',
-    password: ''
-})=>{
-    return(dispatch) =>{
-        const user ={
-            username: userData.username,
-            password: userData.password
-        };
-        return axios.post('/gumzo/login', user)
-            .then(result =>{
-                
             
-                const tokenData = [];
+        )
 
+        //return resultData
+        // if(resultData[0]){
+        //     console.log(resultData[0]);
+        // }
+        
 
-                tokenData.push(result.data)
-                dispatch(_logIn(result.data))
-                // dispatch(_logIn(tokenData)
-                
-            })
+        
+
+        
+        // if(resultData.status === 200){
+        //     dispatch({
+        //         type:  GET_CONTACTS_SUCCESS,
+        //         payload: resultData[0]
+        //     })
+        // }
+        //else{
+        //     dispatch({
+        //         type:  GET_CONTACTS_FAIL,
+        //     })
+        // }
+
     }
+
 }
 
+// export const getContacts = () => dispatch =>{
+//     axios.get('http://localhost:8080/api/auth/contacts')
+//     .then((res) => {
+//         //console.log({res});
+        
+//         dispatch({
+//         type: GET_CONTACTS_SUCCESS,
+//         payload: res.data
+//     })})
+// }

@@ -10,7 +10,7 @@ import {Provider} from 'react-redux';
 import store from './store/store';
 
 
-//const configureStore = store({})
+
 const Gumzo = () =>
     <Provider store={store}>
         <App />

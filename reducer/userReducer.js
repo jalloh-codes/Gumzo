@@ -1,23 +1,17 @@
-const usersReducer = [];
-const  userReducer = (state = usersReducer, action) =>{
-    switch (action.type) {
-        case 'ADD_USER':
-            return[
-                ...state,
-                action.user
-            ];
-        case 'LOG_IN':
-            return[
-                ...state,
-                action.user
-            ];
-        case 'DELETE_USER':
-            return state.filter(({id}) => id !== action.id);
-        case 'GET_USERS':
-            return action.users
-        default:
-            return state;
-    }
-};
+import {GET_CONTACTS_SUCCESS, GET_CONTACTS_FAIL} from '../action/userAction';
 
-export default userReducer;
+const initialState = {
+    user: [],
+    errors: {}
+}
+export default function(state = initialState, action){
+    switch (action.type) {
+        case GET_CONTACTS_SUCCESS:
+            return{
+                ...state,
+                user: action.payload
+            }
+    }
+
+    return state
+};

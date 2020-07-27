@@ -10,32 +10,32 @@ const Tab = createBottomTabNavigator();
 
 const Tabs = ({navigation}) =>{
     return(
-      <Tab.Navigator headerMode='none'initialRouteName="home" >
+      <Tab.Navigator headerMode='none' >
         <Tab.Screen name="home" component={Home} 
           options={{tabBarLabel: 'Home',
           tabBarIcon: () =>(
             <Icon name="home" size={25} color="#009632" />
-          )
+          ),  headerLeft: null
         }}/>
         <Tab.Screen name="profile" component={Profile}
         options={{tabBarLabel: 'Profile',
         tabBarIcon: () =>(
           <Icon name="user"  size={25} color="#009632" />
-        )
+        ),  headerLeft: null
         }}/>
        
         <Tab.Screen name="message" component={MessagesList} 
         options={{tabBarLabel: 'Messages',
         tabBarIcon: () =>(
           <Icon name="inbox" size={25} color="#009632" />
-        )
+        ),  headerLeft: null
         }}/>
   
       <Tab.Screen name="setting" component={Sitting} 
         options={{tabBarLabel: 'Setting',
         tabBarIcon: () =>(
           <Icon name="cog" size={25} color="#009632" />
-        )
+        ),  headerLeft: null
         }}/>
       </Tab.Navigator>
     )

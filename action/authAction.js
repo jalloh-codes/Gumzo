@@ -1,47 +1,77 @@
-import axios from '../axios/axios';
-import AsyncStorage from '@react-native-community/async-storage';
+export const REGISTER_USER_SUCCESS = 'REGISTER_USER_SUCCESS';
+export const REGISTER_USER_FAIL = 'REGISTER_USER_FAIL';
+export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
+export const LOGIN_USER_FAIL = 'LOGIN_USER_FAIL';
 
-const _signUp = (user) =>({
-    type: 'SIGN_UP',
-    user
-})
 
-export const signUp = (data ={
-    username: '',
-    userID: '',
-    password: '',
-}) =>{
-    return(dispatch) =>{
-        const user = {
-            username: data.username,
-            userID: data.userID,
-            password: data.password
-        };
-        return axios.post('/create', user)
-            .then(result =>{
-                dispatch(_signUp(result.data)) 
+
+const url = 'http://localhost:8080/api/auth'
+export const registerUser = (authData) =>{
+    const {username, password, userID} = authData;
+
+    return async dispatch =>{
+
+        const result = await fetch(`${url}/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username,
+                password,
+                userID
             })
+        })
+
+        const resultData = await result.json();
+
+        if(resultData.success){
+            dispatch({
+                type:  REGISTER_USER_SUCCESS,
+                payload: 1
+            })
+        }else{
+            dispatch({
+                type:  REGISTER_USER_FAIL,
+            })
+        }
+
+        return resultData;
+   
     }
+
 }
+export const loginUser = (authData) =>{
+    const {username, password} = authData;
 
-const _lognIn = (user) =>({
-    type: 'LOG_IN',
-    user
-})
-
-export const logIn = (data ={
-    username: '',
-    password: '',
-}) =>{
-    return(dispatch) =>{
-        const user = {
-            username: data.username,
-            password: data.password
-        };
-        return axios.post('/login', user)
-            .then(result =>{
-                return(result)
-                
+    return async dispatch =>{
+        const result = await fetch(`${url}/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username,
+                password,
             })
+        })
+
+        const resultData = await result.json();
+
+
+        
+        if(resultData.success){
+            dispatch({
+                type:  LOGIN_USER_SUCCESS,
+                payload: 1
+            })
+        }else{
+            dispatch({
+                type:  LOGIN_USER_SUCCESS,
+            })
+        }
+
+        return resultData;
     }
+
 }
